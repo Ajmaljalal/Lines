@@ -1,0 +1,17 @@
+Flask
+Werkzeug
+Authlib
+python-dotenv
+requests
+langgraph
+langgraph-sdk
+langgraph-checkpoint-sqlite
+langsmith
+langchain-community
+langchain-core
+langchain-openai
+tavily-python
+
+
+
+
