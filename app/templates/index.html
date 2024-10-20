@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Newsletter Creator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <div class="chat-container">
+      <header>
+        <h1>AI Newsletter Creator</h1>
+      </header>
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages will be dynamically added here -->
+      </div>
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Type your message here...">
+        <button id="sendButton">Send</button>
+      </div>
+    </div>
+
+    <script>
+      // Add your JavaScript code here to handle the chat functionality
+      // This is a placeholder for the actual implementation
+      document.getElementById('sendButton').addEventListener('click', async () => {
+        const userInput = document.getElementById('userInput');
+        let message = userInput.value;
+        message = message.trim();
+        addMessage('user', message);
+        userInput.value = '';
+        const response = await fetch('http://127.0.0.1:5000/chat', {
+          method: 'POST',
+          body: JSON.stringify({ user_input: message }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (data.error) {
+          addMessage('ai', 'Sorry, I couldn\'t process your request. Please try again.');
+        } else {
+          addMessage('ai', data.response);
+        }
+      });
+
+      function addMessage(sender, text) {
+        var chatMessages = document.getElementById('chatMessages');
+        var messageDiv = document.createElement('div');
+        messageDiv.className = 'message ' + sender;
+        if (sender === 'ai') {
+          messageDiv.innerHTML = text;
+        } else {
+          messageDiv.textContent = text;
+        }
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    </script>
+  </body>
+
+</html>
