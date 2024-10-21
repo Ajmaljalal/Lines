@@ -47,6 +47,6 @@ def chat():
         else:
             ai_response = result[-1].content if hasattr(result[-1], 'content') else "No response generated."
         
-        return {"response": [ai_response]}
+        return {"response": ai_response}
     except Exception as e:
         return {"error": str(e)}, 500

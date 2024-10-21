@@ -9,117 +9,87 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from .prompts import get_newsletter_creation_prompt
 from langgraph.checkpoint.memory import MemorySaver
 from tavily import TavilyClient
-from typing import Dict, Any
 from datetime import datetime
+from dataclasses import dataclass, field
+
+llm = ChatOpenAI(model="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"), verbose=False)
 
 
 # logging.basicConfig(level=logging.DEBUG)
 
 # Define our state
+@dataclass
 class NewsletterState(MessagesState):
-    user_input: str
-    articles: list
-    newsletter_content: str
-    email: str
-    date: str # in the format of month/day/year
+    user_input: str = ""
+    articles: list = field(default_factory=list)
+    newsletter_html: str = ""
+    email: str = ""
+    date: str = ""
+    error: str = ""
 
 # Tool definitions
 
 @tool
-def get_current_date():
-    """Returns the current date in the format of month/day/year. Always use this date in the search queries to fetch the most relevant articles."""
+def get_current_date() -> NewsletterState:
+    """Returns the current date in the format of month/day/year. 
+    Always use this date in the search queries to fetch the most relevant articles.
+    """
     now = datetime.now()
     day = now.day
     month = now.month
     year = now.year
-    return f"{month}/{day}/{year}"
+    return {"date": f"{month}/{day}/{year}"}
 
 @tool
-def fetch_news_articles(user_input: str, date: str):
+def fetch_news_articles(user_input: str, date: str) -> NewsletterState:
     """Fetches news articles based on the user input and date"""
     tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
-    response = tavily_client.search(query=user_input + "-" + date, search_depth="advanced", max_results=2)
+    response = tavily_client.search(query=user_input + "-" + date, search_depth="advanced", max_results=5)
     return {"articles": response['results']}
 
 @tool
-def generate_newsletter_html_content(articles: list):
+def html_generation(state: NewsletterState) -> NewsletterState:
     """Generates styled newsletter html content based on the given articles"""
-    html_content = """
-    <html>
-    <head>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                line-height: 1.6;
-                color: #333;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-            .article {
-                background-color: #f9f9f9;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                padding: 15px;
-                margin-bottom: 20px;
-            }
-            .article h2 {
-                color: #2c3e50;
-                margin-top: 0;
-            }
-            .article a {
-                color: #3498db;
-                text-decoration: none;
-            }
-            .article a:hover {
-                text-decoration: underline;
-            }
-            .article img {
-                max-width: 100%;
-                height: auto;
-                margin: 10px 0;
-            }
-            .source {
-                font-style: italic;
-                color: #7f8c8d;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Your Personalized Newsletter</h1>
+    # Use OpenAI's API to generate HTML
+    sys_prompt = f"""
+    - You are a HTML generator for newsletters. 
+    - Make it visually appealing and well-structured.
+    - You generate the newsletter using table tag and style it with inline styling, Do NOT use css classes or ids for styling,
+    - Only return the html, noting else. 
     """
+
+    sys_msg = SystemMessage(content=sys_prompt)
+    # Convert the list of articles to a string
+    articles_str = ', '.join(str(article) for article in state["articles"])
+    human_msg = HumanMessage(content='Generate HTML for a newsletter with the following articles: ' + articles_str)
     
-    for article in articles:
-        html_content += f"""
-        <div class="article">
-            <h2><a href="{article.get('url', '#')}">{article.get('title', 'No Title')}</a></h2>
-            <p>{article.get('content', 'No content available.')}</p>
-            {f'<img src="{article["image"]}" alt="{article.get("title", "Article image")}" />' if article.get('image') else ''}
-            <p class="source">Source: {article.get('source', 'Unknown')}</p>
-        </div>
-        """
-    
-    html_content += "</body></html>"
-    return {"newsletter_content": html_content}
+    response = llm.invoke(
+        [
+            sys_msg,
+            human_msg
+        ]
+    )    
+    return {"newsletter_html": response, "iteration": state.get("iteration", 0) + 1}
 
 # @tool
-# def generate_newsletter_content( state: NewsletterState):
-#     """
-#     Generates newsletter content based on the given articles and style.
-#     It will generate html content with the articles that can be rendered in an email
-#     It will also include a summary of the articles and a call to action for the user
-#     """
-#     return {"newsletter_content": "Generated newsletter content"}
+# def validate_html_newsletter_format(state: NewsletterState) -> NewsletterState:
+#     """Checks if the HTML is valid newsletter HTML with the correct table tags and styling, removing any extra text before and after the <table> tags."""
+#     html = state["newsletter_html"]
 
-# @tool
-# def send_newsletter(state: NewsletterState):
-#     """Sends the newsletter to the specified email address"""
-#     # Placeholder implementation
-#     return f"Newsletter sent to {state.email}"
+#     # Find the start and end of the <table> tags
+#     table_start = html.find("<table")
+#     table_end = html.rfind("</table>") + len("</table>")
+
+#     if table_start != -1 and table_end != -1:
+#         # Extract the content within the <table> tags
+#         html = html[table_start:table_end]
+#     else:
+#         state["error"] = "Invalid HTML format: fix the html with the correct table tags and styling."
+#         return state
+#     return {"newsletter_html": html, "iteration": state.get("iteration", 0) + 1}
 
 # Create LLM and bind tools
-llm = ChatOpenAI(model="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"), verbose=False)
-llm_with_tools = llm.bind_tools([fetch_news_articles, get_current_date, generate_newsletter_html_content])
+llm_with_tools = llm.bind_tools([fetch_news_articles, get_current_date, html_generation])
 
 # System message
 system_prompt = get_newsletter_creation_prompt()
@@ -134,7 +104,7 @@ workflow = StateGraph(NewsletterState)
 
 # Add nodes
 workflow.add_node("assistant", assistant)
-workflow.add_node("tools", ToolNode([fetch_news_articles, get_current_date, generate_newsletter_html_content]))
+workflow.add_node("tools", ToolNode([fetch_news_articles, get_current_date, html_generation]))
 
 # Add edges
 workflow.add_edge(START, "assistant")
