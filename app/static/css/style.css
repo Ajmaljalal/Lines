@@ -10,15 +10,15 @@ body {
 }
 
 .chat-container {
-  width: 80%;
-  max-width: 800px;
+  width: 100%;
+  max-width: none;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 100vh;
 }
 
 header {
@@ -62,6 +62,7 @@ h1 {
   display: flex;
   padding: 20px;
   background-color: #f2f2f2;
+  align-items: flex-start;
 }
 
 #userInput {
@@ -70,6 +71,10 @@ h1 {
   border: none;
   border-radius: 30px;
   font-size: 16px;
+  resize: none;
+  overflow-y: auto;
+  max-height: 150px;
+  width: 70%;
 }
 
 #sendButton {

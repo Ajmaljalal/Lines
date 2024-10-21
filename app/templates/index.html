@@ -18,83 +18,12 @@
         <!-- Messages will be dynamically added here -->
       </div>
       <div class="chat-input">
-        <input type="text" id="userInput" placeholder="Type your message here...">
+        <textarea id="userInput" placeholder="Type your message here..."></textarea>
         <button id="sendButton">Send</button>
       </div>
     </div>
 
-    <script>
-      // Add your JavaScript code here to handle the chat functionality
-      // This is a placeholder for the actual implementation
-      document.getElementById('sendButton').addEventListener('click', async () => {
-        const userInput = document.getElementById('userInput');
-        let message = userInput.value;
-        message = message.trim();
-
-        if (message === '') {
-          return; // Do not send empty messages
-        }
-
-        addMessage('user', message);
-        userInput.value = '';
-
-        try {
-          const response = await fetch('http://127.0.0.1:5000/chat', {
-            method: 'POST',
-            body: JSON.stringify({ user_input: message }),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-
-          const data = await response.json();
-
-          if (data.error) {
-            addMessage('ai', 'Sorry, I couldn\'t process your request. Please try again.');
-          } else if (typeof data.response === 'string') {
-            addMessage('ai', data.response);
-          } else {
-            console.error('Unexpected response type:', data.response);
-            addMessage('ai', 'Received an unexpected response format.');
-          }
-        } catch (error) {
-          console.error('Error fetching chat response:', error);
-          addMessage('ai', 'There was an error processing your request.');
-        }
-      });
-
-      function addMessage(sender, text) {
-        var chatMessages = document.getElementById('chatMessages');
-        var messageDiv = document.createElement('div');
-        messageDiv.className = 'message ' + sender;
-
-        if (sender === 'ai') {
-          if (typeof text === 'string') {
-            // Extract content between <table> tags
-            const tableMatch = text.match(/<table[\s\S]*?<\/table>/);
-            if (tableMatch) {
-              text = tableMatch[0];
-            }
-
-            // Check if text starts with ```html and ends with ```
-            if (text.startsWith('```html') && text.endsWith('```')) {
-              // Remove the markers
-              text = text.slice(7, -3).trim();
-            }
-
-            messageDiv.innerHTML = text;
-          } else {
-            console.error('Expected text to be a string, but received:', text);
-            messageDiv.textContent = 'Received an unexpected response format.';
-          }
-        } else {
-          messageDiv.textContent = text;
-        }
-
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 
 </html>
