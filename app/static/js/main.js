@@ -2,32 +2,60 @@
 console.log('main.js loaded');
 
 document.addEventListener('DOMContentLoaded', () => {
-  const sendButton = document.getElementById('sendButton');
-  const userInput = document.getElementById('userInput');
+  const chatContainer = document.querySelector('.chat-container');
+  const inputContainer = document.querySelector('.input-container');
+  const sendButton = document.querySelector('#sendButton');
+  const userInput = document.querySelector('#userInput');
+  const headerTitle = document.querySelector('h1');
+
+  let chatMessages;
+
+  chatContainer.classList.add('empty');
 
   function sendMessage() {
     let message = userInput.value.trim();
     if (message === '') {
       return;
     }
+    if (chatContainer.classList.contains('empty')) {
+      chatContainer.classList.remove('empty');
+      headerTitle.style.display = 'none';
+      inputContainer.style.width = '80%';
+      inputContainer.style.margin = '0';
+      // Add these lines to move the input container to the bottom
+      chatContainer.style.justifyContent = 'flex-end';
+      inputContainer.style.position = 'fixed';
+      inputContainer.style.bottom = '20px';
+      inputContainer.style.left = '50%';
+      inputContainer.style.transform = 'translateX(-50%)';
+    }
     addMessage('user', message);
     userInput.value = '';
     fetchChatResponse(message);
   }
 
-  sendButton.addEventListener('click', sendMessage);
 
-  userInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      sendMessage();
-    }
+  sendButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    sendMessage();
   });
 
-  userInput.addEventListener('input', () => {
-    userInput.style.height = 'auto';
-    userInput.style.height = userInput.scrollHeight + 'px';
-  });
+  // Ensure the input is found and add the event listener
+  if (userInput) {
+    userInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    userInput.addEventListener('input', () => {
+      userInput.style.height = 'auto';
+      userInput.style.height = userInput.scrollHeight + 'px';
+    });
+  } else {
+    console.error('User input not found');
+  }
 
   async function fetchChatResponse(message) {
     try {
@@ -56,7 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addMessage(sender, text) {
-    var chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) {
+      chatMessages = document.createElement('div');
+      chatMessages.id = 'chatMessages';
+      chatContainer.insertBefore(chatMessages, inputContainer);
+    }
+
     var messageDiv = document.createElement('div');
     messageDiv.className = 'message ' + sender;
 
@@ -81,6 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Replace the existing scrollTop line with this:
+    setTimeout(() => {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 0);
   }
 });

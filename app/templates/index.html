@@ -4,22 +4,19 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Newsletter Creator</title>
+    <title>ChatGPT-like Interface</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
   </head>
 
   <body>
     <div class="chat-container">
-      <header>
-        <h1>AI Newsletter Creator</h1>
-      </header>
-      <div class="chat-messages" id="chatMessages">
-        <!-- Messages will be dynamically added here -->
-      </div>
-      <div class="chat-input">
-        <textarea id="userInput" placeholder="Type your message here..."></textarea>
-        <button id="sendButton">Send</button>
+      <h1>What can I help with?</h1>
+      <div class="input-container">
+        <div class="chat-input">
+          <input type="text" id="userInput" placeholder="Message ChatGPT">
+          <button id="sendButton"><i class="fas fa-chevron-up"></i></button>
+        </div>
       </div>
     </div>
 
