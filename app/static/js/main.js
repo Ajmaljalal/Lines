@@ -99,11 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tableMatch) {
           text = tableMatch[0];
         }
-
-        if (text.startsWith('```html') && text.endsWith('```')) {
-          text = text.slice(7, -3).trim();
-        }
-
         messageDiv.innerHTML = text;
       } else {
         console.error('Expected text to be a string, but received:', text);

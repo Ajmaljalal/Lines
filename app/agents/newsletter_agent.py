@@ -11,8 +11,15 @@ from langgraph.checkpoint.memory import MemorySaver
 from tavily import TavilyClient
 from datetime import datetime
 from dataclasses import dataclass, field
+from langchain_anthropic import ChatAnthropic
 
-llm = ChatOpenAI(model="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"), verbose=False)
+llm = ChatOpenAI(
+        model="gpt-4o", 
+        api_key=os.getenv("OPENAI_API_KEY"), 
+        max_tokens=8192
+    )
+
+sys_prompt = get_newsletter_creation_prompt()
 
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -49,14 +56,8 @@ def fetch_news_articles(user_input: str, date: str) -> NewsletterState:
 
 @tool
 def html_generation(state: NewsletterState) -> NewsletterState:
-    """Generates styled newsletter html content based on the given articles"""
+    """Generates beautiful newsletter html content based on the given articles"""
     # Use OpenAI's API to generate HTML
-    sys_prompt = f"""
-    - You are a HTML generator for newsletters. 
-    - Make it visually appealing and well-structured.
-    - You generate the newsletter using table tag and style it with inline styling, Do NOT use css classes or ids for styling,
-    - Only return the html, noting else. 
-    """
 
     sys_msg = SystemMessage(content=sys_prompt)
     # Convert the list of articles to a string
@@ -71,29 +72,11 @@ def html_generation(state: NewsletterState) -> NewsletterState:
     )    
     return {"newsletter_html": response, "iteration": state.get("iteration", 0) + 1}
 
-# @tool
-# def validate_html_newsletter_format(state: NewsletterState) -> NewsletterState:
-#     """Checks if the HTML is valid newsletter HTML with the correct table tags and styling, removing any extra text before and after the <table> tags."""
-#     html = state["newsletter_html"]
-
-#     # Find the start and end of the <table> tags
-#     table_start = html.find("<table")
-#     table_end = html.rfind("</table>") + len("</table>")
-
-#     if table_start != -1 and table_end != -1:
-#         # Extract the content within the <table> tags
-#         html = html[table_start:table_end]
-#     else:
-#         state["error"] = "Invalid HTML format: fix the html with the correct table tags and styling."
-#         return state
-#     return {"newsletter_html": html, "iteration": state.get("iteration", 0) + 1}
-
 # Create LLM and bind tools
 llm_with_tools = llm.bind_tools([fetch_news_articles, get_current_date, html_generation])
 
 # System message
-system_prompt = get_newsletter_creation_prompt()
-sys_msg = SystemMessage(content=system_prompt)
+sys_msg = SystemMessage(content=sys_prompt)
 
 # Node definition
 def assistant(state: NewsletterState):
