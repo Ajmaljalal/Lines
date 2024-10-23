@@ -16,7 +16,8 @@ from langchain_anthropic import ChatAnthropic
 llm = ChatOpenAI(
         model="gpt-4o", 
         api_key=os.getenv("OPENAI_API_KEY"), 
-        max_tokens=8192
+        max_tokens=8192,
+        temperature=0.3
     )
 
 sys_prompt = get_newsletter_creation_prompt()

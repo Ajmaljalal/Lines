@@ -1,13 +1,12 @@
-// This file is currently empty, but you can add client-side functionality here if needed.
-console.log('main.js loaded');
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const chatContainer = document.querySelector('.chat-container');
   const inputContainer = document.querySelector('.input-container');
   const sendButton = document.querySelector('#sendButton');
   const userInput = document.querySelector('#userInput');
-  const headerTitle = document.querySelector('h1');
-
+  const headerTitle = document.getElementById('title');
+  const headerSubtitle = document.getElementById('subtitle');
   let chatMessages;
 
   chatContainer.classList.add('empty');
@@ -20,12 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (chatContainer.classList.contains('empty')) {
       chatContainer.classList.remove('empty');
       headerTitle.style.display = 'none';
+      headerSubtitle.style.display = 'none';
       inputContainer.style.width = '80%';
       inputContainer.style.margin = '0';
-      // Add these lines to move the input container to the bottom
+
       chatContainer.style.justifyContent = 'flex-end';
       inputContainer.style.position = 'fixed';
-      inputContainer.style.bottom = '20px';
+      // inputContainer.style.bottom = '20px';
       inputContainer.style.left = '50%';
       inputContainer.style.transform = 'translateX(-50%)';
     }
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!chatMessages) {
       chatMessages = document.createElement('div');
       chatMessages.id = 'chatMessages';
-      chatContainer.insertBefore(chatMessages, inputContainer);
+      chatContainer.appendChild(chatMessages);
     }
 
     var messageDiv = document.createElement('div');
