@@ -12,7 +12,7 @@ langchain-core
 langchain-openai
 tavily-python
 langchain-anthropic
-
+sendgrid
 
 
 
