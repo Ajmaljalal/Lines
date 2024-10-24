@@ -1,17 +1,35 @@
 import logging
 import os
-from flask import request
 from langgraph.graph import StateGraph, MessagesState, START
 from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import ToolNode, tools_condition
+
+from app.utils.email_sender import sendgrid_send_email
+
 from .prompts import get_newsletter_creation_prompt
 from langgraph.checkpoint.memory import MemorySaver
 from tavily import TavilyClient
 from datetime import datetime
 from dataclasses import dataclass, field
-from langchain_anthropic import ChatAnthropic
+# from langchain_anthropic import ChatAnthropic
+
+
+# Set specific loggers to ERROR/CRITICAL
+loggers = [
+    'httpx',
+    'httpcore',
+    'werkzeug',
+    'openai',
+    'python_http_client',
+    'flask',
+    'urllib3'
+]
+
+for logger_name in loggers:
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.ERROR) 
 
 llm = ChatOpenAI(
         model="gpt-4o", 
@@ -22,16 +40,14 @@ llm = ChatOpenAI(
 
 sys_prompt = get_newsletter_creation_prompt()
 
-
-# logging.basicConfig(level=logging.DEBUG)
-
 # Define our state
 @dataclass
 class NewsletterState(MessagesState):
     user_input: str = ""
     articles: list = field(default_factory=list)
     newsletter_html: str = ""
-    email: str = ""
+    from_email: str = ""
+    to_emails: list[str] = field(default_factory=list)
     date: str = ""
     error: str = ""
 
@@ -73,8 +89,14 @@ def html_generation(state: NewsletterState) -> NewsletterState:
     )    
     return {"newsletter_html": response, "iteration": state.get("iteration", 0) + 1}
 
+@tool
+def send_email(newsletter_html: str, to: list[str], subject: str) -> NewsletterState:
+    """Sends the newsletter html content to the given email addresses"""
+    sendgrid_send_email(to, subject, newsletter_html, "ajmal@getnewsletter.ai")
+    return {"status": "Email sent successfully!"}
+
 # Create LLM and bind tools
-llm_with_tools = llm.bind_tools([fetch_news_articles, get_current_date, html_generation])
+llm_with_tools = llm.bind_tools([fetch_news_articles, get_current_date, html_generation, send_email])
 
 # System message
 sys_msg = SystemMessage(content=sys_prompt)
@@ -88,7 +110,7 @@ workflow = StateGraph(NewsletterState)
 
 # Add nodes
 workflow.add_node("assistant", assistant)
-workflow.add_node("tools", ToolNode([fetch_news_articles, get_current_date, html_generation]))
+workflow.add_node("tools", ToolNode([fetch_news_articles, get_current_date, html_generation, send_email]))
 
 # Add edges
 workflow.add_edge(START, "assistant")
@@ -109,8 +131,7 @@ def run_newsletter_creator(user_input, thread_id):
     
     try:
         result = newsletter_creator_agent.invoke({"messages": messages, "user_input": user_input}, config)
-        
-        for m in result['messages']:
+        for m in result.get("messages", []):
             m.pretty_print()
 
         return result.get("messages", [])

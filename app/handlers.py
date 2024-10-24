@@ -1,9 +1,9 @@
 from cmath import e
 import logging
-from flask import jsonify, session, url_for, request
+import os
+from flask import session, url_for, request
 from authlib.integrations.flask_client import OAuth
 import secrets
-
 from app.agents.newsletter_agent import run_newsletter_creator
 
 oauth = OAuth()
