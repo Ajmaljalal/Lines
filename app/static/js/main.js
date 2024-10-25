@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tableMatch = text.match(/<table[\s\S]*?<\/table>/);
         if (tableMatch) {
           text = tableMatch[0];
+          messageDiv.classList.add('table');
         }
         messageDiv.innerHTML = text;
       } else {

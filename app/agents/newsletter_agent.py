@@ -68,7 +68,12 @@ def get_current_date() -> NewsletterState:
 def fetch_news_articles(user_input: str, date: str) -> NewsletterState:
     """Fetches news articles based on the user input and date"""
     tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
-    response = tavily_client.search(query=user_input + "-" + date, search_depth="advanced", max_results=5)
+    response = tavily_client.search(
+        query=user_input + "-" + date, 
+        search_depth="advanced", 
+        max_results=5,
+        include_images=True
+    )
     return {"articles": response['results']}
 
 @tool

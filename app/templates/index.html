@@ -4,12 +4,17 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT-like Interface</title>
+    <title>Your Personalized Newsletter</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
   </head>
 
   <body>
+    <header class="main-header">
+      <div class="header-content">
+        <div class="logo">LINES: Your Personalized Newsletter</div>
+      </div>
+    </header>
     <div class="chat-container">
       <h1 id="title">Welcome!</h1>
       <h3 id="subtitle" style="text-align: center;">I am your assistant in generating and sending newsletters.<br>
@@ -18,7 +23,7 @@
     <div class="input-container">
       <div class="chat-input">
         <input type="text" id="userInput" placeholder="Message ChatGPT">
-        <button id="sendButton"><i class="fas fa-chevron-up"></i></button>
+        <button id="sendButton">⬆</button>
       </div>
     </div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
