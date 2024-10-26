@@ -1,18 +1,18 @@
 import logging
-import os
-from langgraph.graph import StateGraph, MessagesState, START
-from langchain_core.tools import tool
+from langgraph.graph import StateGraph, START
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import ToolNode, tools_condition
 
-from app.utils.email_sender import sendgrid_send_email
+from app.agents.prompts import newsletter_agent_system_prompt
+from app.tools.current_date import get_current_date
+from app.tools.fetch_news_articles import fetch_news_articles
+from app.tools.html_content_generator import html_generation
+from app.tools.send_email import send_email
+from app.utils.llms import OpenAI_GPT4O
+from app.utils.newsletter_state import NewsletterState
 
-from .prompts import get_newsletter_creation_prompt
 from langgraph.checkpoint.memory import MemorySaver
-from tavily import TavilyClient
-from datetime import datetime
-from dataclasses import dataclass, field
+
 # from langchain_anthropic import ChatAnthropic
 
 
@@ -31,80 +31,12 @@ for logger_name in loggers:
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.ERROR) 
 
-llm = ChatOpenAI(
-        model="gpt-4o", 
-        api_key=os.getenv("OPENAI_API_KEY"), 
-        max_tokens=8192,
-        temperature=0.3
-    )
-
-sys_prompt = get_newsletter_creation_prompt()
-
-# Define our state
-@dataclass
-class NewsletterState(MessagesState):
-    user_input: str = ""
-    articles: list = field(default_factory=list)
-    newsletter_html: str = ""
-    from_email: str = ""
-    to_emails: list[str] = field(default_factory=list)
-    date: str = ""
-    error: str = ""
-
-# Tool definitions
-
-@tool
-def get_current_date() -> NewsletterState:
-    """Returns the current date in the format of month/day/year. 
-    Always use this date in the search queries to fetch the most relevant articles.
-    """
-    now = datetime.now()
-    day = now.day
-    month = now.month
-    year = now.year
-    return {"date": f"{month}/{day}/{year}"}
-
-@tool
-def fetch_news_articles(user_input: str, date: str) -> NewsletterState:
-    """Fetches news articles based on the user input and date"""
-    tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
-    response = tavily_client.search(
-        query=user_input + "-" + date, 
-        search_depth="advanced", 
-        max_results=5,
-        include_images=True
-    )
-    return {"articles": response['results']}
-
-@tool
-def html_generation(state: NewsletterState) -> NewsletterState:
-    """Generates beautiful newsletter html content based on the given articles"""
-    # Use OpenAI's API to generate HTML
-
-    sys_msg = SystemMessage(content=sys_prompt)
-    # Convert the list of articles to a string
-    articles_str = ', '.join(str(article) for article in state["articles"])
-    human_msg = HumanMessage(content='Generate HTML for a newsletter with the following articles: ' + articles_str)
-    
-    response = llm.invoke(
-        [
-            sys_msg,
-            human_msg
-        ]
-    )    
-    return {"newsletter_html": response, "iteration": state.get("iteration", 0) + 1}
-
-@tool
-def send_email(newsletter_html: str, to: list[str], subject: str) -> NewsletterState:
-    """Sends the newsletter html content to the given email addresses"""
-    sendgrid_send_email(to, subject, newsletter_html, "ajmal@getnewsletter.ai")
-    return {"status": "Email sent successfully!"}
 
 # Create LLM and bind tools
-llm_with_tools = llm.bind_tools([fetch_news_articles, get_current_date, html_generation, send_email])
+llm_with_tools = OpenAI_GPT4O.bind_tools([fetch_news_articles, get_current_date, html_generation, send_email])
 
 # System message
-sys_msg = SystemMessage(content=sys_prompt)
+sys_msg = SystemMessage(content=newsletter_agent_system_prompt)
 
 # Node definition
 def assistant(state: NewsletterState):
@@ -130,6 +62,7 @@ memory = MemorySaver()
 # Compile the graph
 newsletter_creator_agent = workflow.compile(checkpointer=memory)
 
+# Run the newsletter creator agent
 def run_newsletter_creator(user_input, thread_id):
     config = {"configurable": {"thread_id": thread_id}}
     messages = [HumanMessage(content=user_input)]
