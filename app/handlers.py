@@ -28,8 +28,16 @@ def handle_google_signin():
     session['oauth_nonce'] = nonce
     return oauth.google.authorize_redirect(redirect_uri, nonce=nonce)
 
-def get_user_info():
-    return session.get('user', {})
+def get_user_info_handler():
+    user_info = session.get('user', {})
+    if not user_info:
+        return {"error": "User not authenticated"}, 401
+    
+    return {
+        'picture': user_info.get('picture', ''),
+        'name': user_info.get('name', ''),
+        'email': user_info.get('email', '')
+    }
 
 def chat():
     data = request.json

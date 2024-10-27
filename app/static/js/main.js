@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const chatContainer = document.querySelector('.chat-container');
   const inputContainer = document.querySelector('.input-container');
@@ -11,6 +9,35 @@ document.addEventListener('DOMContentLoaded', () => {
   let chatMessages;
 
   chatContainer.classList.add('empty');
+
+  // Add this new code at the beginning
+  const avatarContainer = document.getElementById('avatarContainer');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const userAvatar = document.getElementById('userAvatar');
+
+  // Fetch user info and set avatar
+  fetch('http://127.0.0.1:5000/get-user-info')
+    .then(response => response.json())
+    .then(user => {
+      if (user.picture) {
+        userAvatar.src = user.picture;
+      } else {
+        // Set default avatar if no picture available
+        userAvatar.src = '/static/images/default-avatar.png';
+      }
+    })
+    .catch(error => console.error('Error fetching user info:', error));
+
+  // Toggle dropdown menu
+  avatarContainer.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle('show');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', () => {
+    dropdownMenu.classList.remove('show');
+  });
 
   function sendMessage() {
     let message = userInput.value.trim();

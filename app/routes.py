@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, session, current_app, request, jsonify
-from .handlers import is_user_authenticated, handle_google_signin, oauth, get_user_info, chat
+from .handlers import is_user_authenticated, handle_google_signin, oauth, get_user_info_handler, chat
 
 main = Blueprint('main', __name__)
 
@@ -43,8 +43,7 @@ def signout():
 
 @main.route('/get-user-info')
 def get_user_info():
-    return jsonify(get_user_info())
-
+    return jsonify(get_user_info_handler())
 
 @main.route('/chat', methods=['POST'])
 def chat_route():
