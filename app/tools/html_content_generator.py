@@ -1,5 +1,5 @@
 from langchain_core.messages import SystemMessage, HumanMessage
-from app.utils.llms import OpenAI_GPT4O
+from app.utils.llms import Claude_3_5
 from app.utils.newsletter_state import NewsletterState
 from langchain_core.tools import tool
 from app.agents.prompts import newsletter_html_creation_prompt
@@ -16,9 +16,9 @@ def html_generation(articles: list[dict]) -> NewsletterState:
     articles_str = ', '.join(str(article) for article in articles)
     human_msg = HumanMessage(content='Generate HTML for a newsletter with the following articles: ' + articles_str)
     
-    response = OpenAI_GPT4O.invoke(
+    response = Claude_3_5.invoke(
         [
-            sys_msg,
+            sys_msg,    
             human_msg
         ]
     )    
