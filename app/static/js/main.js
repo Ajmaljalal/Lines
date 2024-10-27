@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.querySelector('#userInput');
   const headerTitle = document.getElementById('title');
   const headerSubtitle = document.getElementById('subtitle');
+  const examplesSection = document.querySelector('.examples-section');
   let chatMessages;
 
   chatContainer.classList.add('empty');
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chatContainer.classList.remove('empty');
       headerTitle.style.display = 'none';
       headerSubtitle.style.display = 'none';
+      examplesSection.style.display = 'none';
       inputContainer.style.width = '80%';
       inputContainer.style.margin = '0';
 

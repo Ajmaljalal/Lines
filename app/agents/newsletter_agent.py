@@ -17,19 +17,19 @@ from langgraph.checkpoint.memory import MemorySaver
 
 
 # Set specific loggers to ERROR/CRITICAL
-loggers = [
-    'httpx',
-    'httpcore',
-    'werkzeug',
-    'openai',
-    'python_http_client',
-    'flask',
-    'urllib3'
-]
+# loggers = [
+#     'httpx',
+#     'httpcore',
+#     'werkzeug',
+#     'openai',
+#     'python_http_client',
+#     'flask',
+#     'urllib3'
+# ]
 
-for logger_name in loggers:
-    logger = logging.getLogger(logger_name)
-    logger.setLevel(logging.ERROR) 
+# for logger_name in loggers:
+#     logger = logging.getLogger(logger_name)
+#     logger.setLevel(logging.ERROR) 
 
 
 # Create LLM and bind tools
