@@ -6,7 +6,8 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from app.agents.prompts import newsletter_agent_system_prompt
 from app.tools.current_date import get_current_date
 from app.tools.fetch_news_articles import fetch_news_articles
-from app.tools.html_content_generator import html_generation
+from app.tools.html_content_generator import html_content_generation
+from app.tools.html_content_updates import html_content_updates
 from app.tools.send_email import send_email
 from app.utils.llms import OpenAI_GPT4O
 from app.utils.newsletter_state import NewsletterState
@@ -33,7 +34,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 
 # Create LLM and bind tools
-llm_with_tools = OpenAI_GPT4O.bind_tools([fetch_news_articles, get_current_date, html_generation, send_email])
+llm_with_tools = OpenAI_GPT4O.bind_tools([fetch_news_articles, get_current_date, html_content_generation, html_content_updates, send_email])
 
 # System message
 sys_msg = SystemMessage(content=newsletter_agent_system_prompt)
@@ -47,7 +48,7 @@ workflow = StateGraph(NewsletterState)
 
 # Add nodes
 workflow.add_node("assistant", assistant)
-workflow.add_node("tools", ToolNode([fetch_news_articles, get_current_date, html_generation, send_email]))
+workflow.add_node("tools", ToolNode([fetch_news_articles, get_current_date, html_content_generation, html_content_updates, send_email]))
 
 # Add edges
 workflow.add_edge(START, "assistant")

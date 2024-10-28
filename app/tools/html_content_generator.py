@@ -5,16 +5,20 @@ from langchain_core.tools import tool
 from app.agents.prompts import newsletter_html_creation_prompt
 
 @tool
-def html_generation(articles: list[dict]) -> NewsletterState: 
-    """Generates beautifully styled html content for a newsletter based on the given articles
+def html_content_generation(articles: list[dict] | None = None, textStringOfTheEmailOrNewsletterBody: str | None = None) -> NewsletterState:
+    """Generates beautifully styled html content for a newsletter based on the given articles or topic as a text string
     Args:
-        articles: list[dict] (list of news articles)
+        articles: list[dict] (list of news articles) or None
+        textStringOfTheEmailOrNewsletterBody: str (a text string of the newsletter or email body) or None
     """
     
     sys_msg = SystemMessage(content=newsletter_html_creation_prompt)
-    # Convert the list of articles to a string
-    articles_str = ', '.join(str(article) for article in articles)
-    human_msg = HumanMessage(content='Generate HTML for a newsletter with the following articles: ' + articles_str)
+    
+    if articles:
+        articles_str = str(articles)
+        human_msg = HumanMessage(content='Generate HTML for a newsletter with the following articles: ' + articles_str)
+    else:
+        human_msg = HumanMessage(content='Generate HTML for a newsletter about the following topic: ' + textStringOfTheEmailOrNewsletterBody)
     
     response = Claude_3_5.invoke(
         [
