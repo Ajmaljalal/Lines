@@ -39,6 +39,24 @@ document.addEventListener('DOMContentLoaded', () => {
     dropdownMenu.classList.remove('show');
   });
 
+  function createLoadingIndicator() {
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading-indicator';
+
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'typing-indicator';
+
+    // Create 3 dots
+    for (let i = 0; i < 3; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'typing-dot';
+      typingIndicator.appendChild(dot);
+    }
+
+    loadingDiv.appendChild(typingIndicator);
+    return loadingDiv;
+  }
+
   function sendMessage() {
     let message = userInput.value.trim();
     if (message === '') {
@@ -87,6 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function fetchChatResponse(message) {
+    const loadingIndicator = createLoadingIndicator();
+    if (chatMessages) {
+      chatMessages.appendChild(loadingIndicator);
+      loadingIndicator.style.display = 'flex';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
     try {
       const response = await fetch('http://127.0.0.1:5000/chat', {
         method: 'POST',
@@ -98,6 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await response.json();
 
+      // Remove loading indicator
+      loadingIndicator.remove();
+
       if (data.error) {
         addMessage('ai', 'Sorry, I couldn\'t process your request. Please try again.');
       } else if (typeof data.response === 'string') {
@@ -107,6 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
         addMessage('ai', 'Received an unexpected response format.');
       }
     } catch (error) {
+      // Remove loading indicator on error too
+      loadingIndicator.remove();
       console.error('Error fetching chat response:', error);
       addMessage('ai', 'There was an error processing your request.');
     }
