@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const userAvatar = document.getElementById('userAvatar');
 
   // Fetch user info and set avatar
-  fetch('http://127.0.0.1:5000/get-user-info')
+  fetch('/get-user-info')
     .then(response => response.json())
     .then(user => {
       if (user.picture) {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/chat', {
+      const response = await fetch('/chat', {
         method: 'POST',
         body: JSON.stringify({ user_input: message }),
         headers: {

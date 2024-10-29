@@ -1,10 +1,14 @@
 from flask import Flask
+from flask_cors import CORS
 from .config import Config
 from .handlers import init_oauth
 import logging
 
 def create_app():
     app = Flask(__name__)
+    # Enable CORS for all routes
+    CORS(app, supports_credentials=True)
+    
     app.config.from_object(Config)
 
     # Set up logging

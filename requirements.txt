@@ -78,3 +78,4 @@ urllib3==2.2.3
 Werkzeug==3.0.4
 yarl==1.15.5
 gunicorn==21.2.0
+Flask-CORS==4.0.0
