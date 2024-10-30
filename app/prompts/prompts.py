@@ -9,6 +9,8 @@ You are an expert html email and newsletter creator agent. Your primary goal is 
    - If not sure about any of the above, ask the user for clarification
    - Actively listen to the user and engage in a conversation to clarify the requirements
    - Do not answer any questions that are not related to the newsletter/email creation process
+   - Ask the user for confirmation before proceeding to the next step
+   - Do not send any emails or distribute any newsletters without user requesting it explicitly
 
 2. GATHER CONTENT
    - If user provided text input, use it as the content for the newsletter/email
@@ -125,6 +127,7 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
    - Subtitle or date
    - Brand elements
    - Background and styling
+   - Do not use <table> inside <table> tag. Use only one table for the entire newsletter. Use <tr> and <td> tags for styling and layout
 
 2. CONTENT (Required)
    - 2-5 article sections
@@ -205,6 +208,24 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
             <a href="[URL]" style="display: inline-block; padding: 10px 20px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 5px;">Read More</a>
         </td>
     </tr>
+        <!-- Article Section -->
+    <tr>
+        <td style="padding: 30px 20px; background-color: #ffffff;">
+            <tr width="100%" cellpadding="0" cellspacing="0">
+
+                    <td width="30%" style="padding-right: 20px;">
+                        <img src="[URL]" alt="Article Image" style="width: 100%; height: auto;">
+                    </td>
+                    <td width="70%" style="vertical-align: top;">
+                        <h2 style="color: #1f2937; margin: 0;">Article Title</h2>
+                        <p style="color: #64748b; margin: 5px 0;">[Date] | [Source]</p>
+                        <p style="color: #374151; line-height: 1.6;">Article summary goes here...</p>
+                        <a href="[URL]" style="display: inline-block; padding: 8px 16px; background-color: #2563eb; color: #ffffff; text-decoration: none;">Learn More</a>
+                    </td>
+               
+            </tr>
+        </td>
+    </tr>
 </table>
 </template>
 
@@ -242,8 +263,8 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
     <!-- Article Section -->
     <tr>
         <td style="padding: 30px 20px; background-color: #ffffff;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
+            <tr width="100%" cellpadding="0" cellspacing="0">
+
                     <td width="30%" style="padding-right: 20px;">
                         <img src="[URL]" alt="Article Image" style="width: 100%; height: auto;">
                     </td>
@@ -253,8 +274,8 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
                         <p style="color: #374151; line-height: 1.6;">Article summary goes here...</p>
                         <a href="[URL]" style="display: inline-block; padding: 8px 16px; background-color: #2563eb; color: #ffffff; text-decoration: none;">Learn More</a>
                     </td>
-                </tr>
-            </table>
+               
+            </tr>
         </td>
     </tr>
     
@@ -302,6 +323,24 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
                     </td>
                 </tr>
             </table>
+        </td>
+    </tr>
+        <!-- Article Section -->
+    <tr>
+        <td style="padding: 30px 20px; background-color: #ffffff;">
+            <tr width="100%" cellpadding="0" cellspacing="0">
+
+                    <td width="30%" style="padding-right: 20px;">
+                        <img src="[URL]" alt="Article Image" style="width: 100%; height: auto;">
+                    </td>
+                    <td width="70%" style="vertical-align: top;">
+                        <h2 style="color: #1f2937; margin: 0;">Article Title</h2>
+                        <p style="color: #64748b; margin: 5px 0;">[Date] | [Source]</p>
+                        <p style="color: #374151; line-height: 1.6;">Article summary goes here...</p>
+                        <a href="[URL]" style="display: inline-block; padding: 8px 16px; background-color: #2563eb; color: #ffffff; text-decoration: none;">Learn More</a>
+                    </td>
+               
+            </tr>
         </td>
     </tr>
 </table>
