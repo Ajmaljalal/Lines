@@ -6,6 +6,8 @@ import logging
 
 def create_app():
     app = Flask(__name__)
+    # Set timeouts at the root level
+    app.config['TIMEOUT'] = 540 
     # Enable CORS for all routes
     CORS(app, supports_credentials=True)
     
