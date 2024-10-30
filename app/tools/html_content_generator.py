@@ -2,7 +2,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from app.utils.llms import Claude_3_5
 from app.utils.newsletter_state import NewsletterState
 from langchain_core.tools import tool
-from app.agents.prompts import newsletter_html_creation_prompt
+from app.prompts.prompts import newsletter_html_creation_prompt
 
 @tool
 def html_content_generation(articles: list[dict] | None = None, textStringOfTheEmailOrNewsletterBody: str | None = None) -> NewsletterState:

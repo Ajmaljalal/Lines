@@ -3,7 +3,7 @@ from langgraph.graph import StateGraph, START
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.prebuilt import ToolNode, tools_condition
 
-from app.agents.prompts import newsletter_agent_system_prompt
+from app.prompts.prompts import newsletter_agent_system_prompt
 from app.tools.current_date import get_current_date
 from app.tools.fetch_news_articles import fetch_news_articles
 from app.tools.html_content_generator import html_content_generation
