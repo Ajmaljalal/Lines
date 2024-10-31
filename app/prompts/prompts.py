@@ -54,10 +54,6 @@ Follow the steps below strictly to create the newsletter/email.
    - Handle any errors appropriately
 
 ## Available Tools
-<tool>get_current_date</tool>
-    - Always use for current date references
-    - Returns: Current date in standard format
-
 <tool>fetch_news_articles</tool>
     - Use for gathering latest news
     - Input: Is it a topic or keywords, or both?
