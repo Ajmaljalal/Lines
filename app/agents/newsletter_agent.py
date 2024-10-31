@@ -4,8 +4,8 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.prebuilt import ToolNode, tools_condition
 
 from app.prompts.prompts import newsletter_agent_system_prompt
-from app.tools.fetch_news_articles import fetch_news_articles
-from app.tools.html_content_generator import html_content_generation
+# from app.tools.fetch_news_articles import fetch_news_articles
+from app.tools.html_content_generator import generate_newsletter_based_on_email_content, generate_newsletter_based_on_topic_or_inquiry
 from app.tools.html_content_updates import html_content_updates
 from app.tools.send_email import send_email
 from app.utils.llms import OpenAI_GPT4O
@@ -33,7 +33,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 
 # Create LLM and bind tools
-llm_with_tools = OpenAI_GPT4O.bind_tools([fetch_news_articles, html_content_generation, html_content_updates, send_email])
+llm_with_tools = OpenAI_GPT4O.bind_tools([generate_newsletter_based_on_topic_or_inquiry, generate_newsletter_based_on_email_content, html_content_updates, send_email])
 
 # System message
 sys_msg = SystemMessage(content=newsletter_agent_system_prompt)
@@ -47,7 +47,7 @@ workflow = StateGraph(NewsletterState)
 
 # Add nodes
 workflow.add_node("assistant", assistant)
-workflow.add_node("tools", ToolNode([fetch_news_articles, html_content_generation, html_content_updates, send_email]))
+workflow.add_node("tools", ToolNode([generate_newsletter_based_on_topic_or_inquiry, generate_newsletter_based_on_email_content, html_content_updates, send_email]))
 
 # Add edges
 workflow.add_edge(START, "assistant")

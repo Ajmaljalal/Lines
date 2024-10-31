@@ -59,13 +59,18 @@ Follow the steps below strictly to create the newsletter/email.
     - Input: Is it a topic or keywords, or both?
     - Returns: Recent articles (last 7 days)
 
-<tool>html_content_generation</tool>
-    - Use for creating newsletter HTML
-    - Input: list of articles from fetch_news_articles tool or user provided text input
+<tool>generate_newsletter_based_on_topic_or_inquiry</tool>
+    - Use for creating newsletter HTML based on a topic or keywords provided by the user, which is usually a short phrase or sentence about the newsletter
+    - Input: topic or keywords provided by the user
+    - Returns: Complete HTML content
+
+<tool>generate_newsletter_based_on_email_content</tool>
+    - Use for creating newsletter HTML based on email content text provided by the user, which is usually the body of an email and longer than a topic or keywords
+    - Input: email content text
     - Returns: Complete HTML content
 
 <tool>html_content_updates</tool>
-    - Use for modifying existing content
+    - Use for modifying existing newsletter/email HTML content
     - Input: Original HTML and requested changes
     - Returns: Updated HTML content
 
