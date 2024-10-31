@@ -37,10 +37,10 @@ body {
   font-weight: 600;
   opacity: 0;
   animation: slideUp 0.5s ease-out forwards;
-  color: #E2E2E4;
+  color: #ffffff;
   letter-spacing: 1.2px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(120deg, #E2E2E4, #A1A1A9);
+  background: linear-gradient(120deg, #ffffff, #ffffff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

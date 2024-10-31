@@ -1,7 +1,20 @@
 from flask import Blueprint, render_template, redirect, url_for, session, current_app, request, jsonify
+from functools import wraps
 from .handlers import is_user_authenticated, handle_google_signin, oauth, get_user_info_handler, chat
 
 main = Blueprint('main', __name__)
+
+def handle_403_error(e):
+    return jsonify(error="Unauthorized access"), 403
+
+def auth_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not is_user_authenticated():
+            current_app.logger.warning("Unauthorized access attempt")
+            return jsonify(error="Authentication required"), 403
+        return f(*args, **kwargs)
+    return decorated_function
 
 @main.route('/')
 def index():
@@ -42,9 +55,11 @@ def signout():
     return redirect(url_for('main.signin'))
 
 @main.route('/get-user-info')
+@auth_required
 def get_user_info():
     return jsonify(get_user_info_handler())
 
 @main.route('/chat', methods=['POST'])
+@auth_required
 def chat_route():
     return jsonify(chat())

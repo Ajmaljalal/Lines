@@ -156,15 +156,17 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
    - All colors must use hex codes
    - Use percentage units for responsive elements
    - Use px units for fixed measurements
+   - Always use light theme colors for the newsletter/email
 
-2. LAYOUT REQUIREMENTS
+2. HTML LAYOUT REQUIREMENTS
    - Base table width: 100%
    - Maximum width: 900px
    - Proper cellpadding and cellspacing
    - border-collapse: collapse
    - Responsive design for all devices
+   - Always open links in a new tab
 
-3. CONTENT STYLING
+3. HTML CONTENT STYLING
    - Font families: Use web-safe modern fonts
    - Image width: 100% with height: auto
    - Padding: Minimum 20px for readability
@@ -194,7 +196,7 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
 ## Example Templates
 
 <template name="modern">
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
+<table background-color="#f2faf9" width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
     <!-- Header Section -->
     <tr>
         <td style="padding: 40px 20px; background-color: #f8fafc;">
@@ -231,11 +233,21 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
             </tr>
         </td>
     </tr>
+        <!-- Footer Section -->
+    <tr>
+        <td style="padding: 20px; background-color: #f8fafc; text-align: center;">
+            <p style="color: #64748b; margin: 0;">© 2024 Company Name. All rights reserved.</p>
+            <p style="color: #64748b; margin: 10px 0;">
+                <a href="[URL]" style="color: #2563eb; text-decoration: none;">Unsubscribe</a> |
+                <a href="[URL]" style="color: #2563eb; text-decoration: none;">View in Browser</a>
+            </p>
+        </td>
+    </tr>
 </table>
 </template>
 
 <template name="minimal">
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
+<table background-color="#f8fafc" width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
     <!-- Header Section -->
     <tr>
         <td style="padding: 20px; border-bottom: 2px solid #e2e8f0;">
@@ -252,11 +264,22 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
             <a href="[URL]" style="color: #2563eb; text-decoration: none;">Continue Reading →</a>
         </td>
     </tr>
+
+    <!-- Footer Section -->
+    <tr>
+        <td style="padding: 20px; background-color: #f8fafc; text-align: center;">
+            <p style="color: #64748b; margin: 0;">© 2024 Company Name. All rights reserved.</p>
+            <p style="color: #64748b; margin: 10px 0;">
+                <a href="[URL]" style="color: #2563eb; text-decoration: none;">Unsubscribe</a> |
+                <a href="[URL]" style="color: #2563eb; text-decoration: none;">View in Browser</a>
+            </p>
+        </td>
+    </tr>
 </table>
 </template>
 
 <template name="corporate">
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
+<table background-color="#f0fafd" width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
     <!-- Header Section with Logo -->
     <tr>
         <td style="padding: 30px 20px; background-color: #1e293b;">
@@ -279,7 +302,6 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
                         <p style="color: #374151; line-height: 1.6;">Article summary goes here...</p>
                         <a href="[URL]" style="display: inline-block; padding: 8px 16px; background-color: #2563eb; color: #ffffff; text-decoration: none;">Learn More</a>
                     </td>
-               
             </tr>
         </td>
     </tr>
@@ -298,7 +320,7 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
 </template>
 
 <template name="newsletter-grid">
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
+<table background-color="#f8fafc" width="100%" cellpadding="0" cellspacing="0" style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif;">
     <!-- Header Section -->
     <tr>
         <td style="padding: 40px 20px; background-color: #f8fafc; text-align: center;">
@@ -310,7 +332,7 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
     <!-- Grid Articles Section -->
     <tr>
         <td style="padding: 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
+>
                 <tr>
                     <!-- Article 1 -->
                     <td width="50%" style="padding: 10px;">
@@ -327,7 +349,6 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
                         <a href="[URL]" style="color: #2563eb; text-decoration: none;">Read More →</a>
                     </td>
                 </tr>
-            </table>
         </td>
     </tr>
         <!-- Article Section -->
@@ -346,6 +367,16 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
                     </td>
                
             </tr>
+        </td>
+    </tr>
+    <!-- Footer Section -->
+    <tr>
+        <td style="padding: 20px; background-color: #f8fafc; text-align: center;">
+            <p style="color: #64748b; margin: 0;">© 2024 Company Name. All rights reserved.</p>
+            <p style="color: #64748b; margin: 10px 0;">
+                <a href="[URL]" style="color: #2563eb; text-decoration: none;">Unsubscribe</a> |
+                <a href="[URL]" style="color: #2563eb; text-decoration: none;">View in Browser</a>
+            </p>
         </td>
     </tr>
 </table>
