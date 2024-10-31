@@ -1,5 +1,4 @@
 from langchain_anthropic import ChatAnthropic
-from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 import os
 
@@ -17,10 +16,10 @@ Claude_3_5 = ChatAnthropic(
     temperature=0.5
 )
 
-Groq_LLAMA3_70B = ChatGroq(
-    model="llama3-70b-8192",
-    api_key=os.getenv("GROQ_API_KEY"),
-    max_tokens=8192,
-    temperature=0.5
-)
+# Groq_LLAMA3_70B = ChatGroq(
+#     model="llama3-70b-8192",
+#     api_key=os.getenv("GROQ_API_KEY"),
+#     max_tokens=8192,
+#     temperature=0.5
+# )
 
