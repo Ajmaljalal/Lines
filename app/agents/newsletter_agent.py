@@ -65,7 +65,8 @@ newsletter_creator_agent = workflow.compile(checkpointer=memory)
 
 # Run the newsletter creator agent
 def run_newsletter_creator(user_input, thread_id):
-    config = {"configurable": {"thread_id": thread_id}}
+    config = {"configurable": {"thread_id": thread_id}, 
+              "recursion_limit": 100}
     messages = [HumanMessage(content=user_input)]
     
     try:

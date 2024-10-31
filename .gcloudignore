@@ -21,3 +21,6 @@ __pycache__/
 
 # Ignore all .env files
 new_venv/
+
+# md files
+*.md
