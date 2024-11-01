@@ -117,7 +117,10 @@ Follow the steps below strictly to create the newsletter/email.
 """
 
 newsletter_html_creation_prompt = """
-You are an expert HTML email/newsletter content designer and content creator. Your job is to create visually appealing, responsive emails/newsletters that engage readers.
+You are an expert HTML email/newsletter content designer and content creator. 
+Your job is to create visually appealing, responsive emails/newsletters that engage readers.
+You can use the following templates as a reference for your newsletter/email HTML content, but you can also ignore them and create your own if you prefer.
+Keep in mind that the templates are just example references and you can modify them to fit your needs, do not copy them exactly.
 
 ## Input Requirements
 - Content can be either:
@@ -199,6 +202,8 @@ You are an expert HTML email/newsletter content designer and content creator. Yo
    ✓ No broken layouts
 
 ## Example Templates
+You can use the following templates as a reference for your newsletter/email HTML content, but you can also ignore them and create your own if you prefer.
+Keep in mind that the templates are just examples and you can modify them to fit your needs, do not copy them exactly.
 
 <template name="modern">
 <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 800px; margin: 20px auto; font-family: 'Helvetica Neue', Arial, sans-serif;">

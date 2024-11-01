@@ -12,15 +12,14 @@ def auth_required(f):
     def decorated_function(*args, **kwargs):
         if not is_user_authenticated():
             current_app.logger.warning("Unauthorized access attempt")
-            return jsonify(error="Authentication required"), 403
+            return redirect(url_for('main.signin'))
         return f(*args, **kwargs)
     return decorated_function
 
 @main.route('/')
+@auth_required
 def index():
-    if is_user_authenticated():
-        return render_template('index.html')
-    return redirect(url_for('main.signin'))
+    return render_template('index.html')
 
 @main.route('/signin')
 def signin():
