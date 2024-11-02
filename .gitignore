@@ -1,22 +1,21 @@
 # Virtual environments
-new_venv/
-new_venv_2/
-new_venv_3/
+python/new_venv/
+
 
 # Python cache files
-__pycache__/
-*.pyc
+python/__pycache__/
+python/*.pyc
 
 # Environment variables
-.env
+python/.env
 
 # IDE specific files
-.vscode/
-.idea/
+python/.vscode/
+python/.idea/
 
 # OS generated files
-.DS_Store
-Thumbs.db
+python/.DS_Store
+python/Thumbs.db
 
 # md files
-*.md
+python/*.md
