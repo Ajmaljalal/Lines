@@ -19,3 +19,13 @@ python/Thumbs.db
 
 # md files
 python/*.md
+
+
+# Node files
+node/node_modules/
+node/.env
+node/dist/
+node/*.js
+node/*.js.map
+
+
